@@ -29,7 +29,7 @@
   - если минимально *(D(i, j-1) + 1)*, добавляем вставку символа S1[i] и идём в (i, j-1);
   - если минимально *(D(i-1, j-1) + m)*, где m = 1, если *S1[i] != S2[j]*, иначе m = 0; после чего идём в *(i-1, j-1)* и добавляем замену если *m = 1*.
   
-![image](https://yadi.sk/i/b-bMYyTn3PKLiA)
+![image](https://2.downloader.disk.yandex.ru/preview/219903665cb91be063e3f47d4253b5e64ad614e8b07867f4969ffb564a71ea3e/inf/4yXdB_wd41WeNNaT6AHvbH5RE78skz8_cgVrKTM5FQ2Aqh-OAHoomHksfEY8OrTpXL-42ZGFXOQW9mRL3ueB7g%3D%3D?uid=0&filename=2017-11-01_20-53-30.png&disposition=inline&hash=&limit=0&content_type=image%2Fpng&tknv=v2&size=XXL&crop=0)
 
 Таким образом, алгоритм работает за *O(|S1| * |S2|)* времени и ***O(|S1| * |S2|)*** памяти, так как для восстановления предписания необходимо хранить всю матрицу целиком.
 
