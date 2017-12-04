@@ -42,7 +42,7 @@ def heuristic(obj1, obj2):
     return result
 
 
-def buildGraph(begin, end, dict):
+def build_graph(begin, end, dict):
 
     d = {}
     g = Graph()
@@ -127,7 +127,7 @@ dictionary = "dict.txt"
 
 steps = -1
 
-g = buildGraph(begin, end, dictionary)
+g = build_graph(begin, end, dictionary)
 
 if g != -1:
     steps = find_path(g, begin, end)
