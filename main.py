@@ -48,7 +48,7 @@ def build_graph(begin, end, dict):
     g = Graph()
     flag = 0
     input_file = open(dict,'r')
-    # create buckets of words that differ by one letter
+    # "корзины", состоящие из слов, отличающихся на 1 символ
     for line in input_file:
         if len(line) - 1 == len(begin):
             word = line[:-1]
@@ -61,12 +61,12 @@ def build_graph(begin, end, dict):
                 else:
                     d[bucket] = [word]
 
-
+    # проверка, что оба входных слова есть в словаре
     if flag != 2:
         print "No such word in dictionary! Please, try again."
         return -1
 
-
+    # построение графа
     for bucket in d.keys():
         for i in range(len(d[bucket])):
             for j in range(i + 1, len(d[bucket])):
@@ -76,13 +76,19 @@ def build_graph(begin, end, dict):
 
 
 def find_path(graph, begin, end):
-
+    
+    # текущая граница рассматриваемых элементов
     frontier = PriorityQueue()
     frontier.put(begin)
+    
+    # сохранение предыдущих элементов (для построения пути)
     previous = {}
     previous[begin] = None
+    
+    # стоимость от начала до рассматриваемого элемента
     all_cost = {}
     all_cost[begin] = 0
+    
     flag = False
 
     while not frontier.empty():
@@ -111,7 +117,7 @@ def find_path(graph, begin, end):
     while current != begin:
         current = previous[current]
         path.append(current)
-    # path.append(begin)
+    
     path.reverse()
 
     return path
@@ -127,10 +133,10 @@ dictionary = "dict.txt"
 
 steps = -1
 
-g = build_graph(begin, end, dictionary)
+graph = build_graph(begin, end, dictionary)
 
-if g != -1:
-    steps = find_path(g, begin, end)
+if graph != -1:
+    steps = find_path(graph, begin, end)
 
 if steps != -1:
     for word in steps:
