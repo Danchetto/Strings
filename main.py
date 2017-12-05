@@ -1,14 +1,13 @@
+# -*- coding: utf-8 -*
+
 from Queue import *
 
 
-
 class Graph():
-
     edges = []
     nodes = []
 
     def add_edge(self, obj1, obj2):
-
         if not obj1 in self.nodes:
             self.nodes.append(obj1)
         if not obj2 in self.nodes:
@@ -18,8 +17,8 @@ class Graph():
             self.edges.append((obj1, obj2))
 
 
-    def neighbours(self, obj):
 
+    def neighbours(self, obj):
         neighs = []
 
         for pair in self.edges:
@@ -31,8 +30,8 @@ class Graph():
         return neighs
 
 
-def heuristic(obj1, obj2):
 
+def heuristic(obj1, obj2):
     result = 0
 
     for i in range(len(obj1)):
@@ -42,12 +41,12 @@ def heuristic(obj1, obj2):
     return result
 
 
-def build_graph(begin, end, dict):
 
+def build_graph(begin, end, dict):
     d = {}
     g = Graph()
     flag = 0
-    input_file = open(dict,'r')
+    input_file = open(dict, 'r')
     # "корзины", состоящие из слов, отличающихся на 1 символ
     for line in input_file:
         if len(line) - 1 == len(begin):
@@ -55,7 +54,7 @@ def build_graph(begin, end, dict):
             if word == begin or word == end:
                 flag += 1
             for i in range(len(word)):
-                bucket = word[:i] + '_' + word[i+1:]
+                bucket = word[:i] + '_' + word[i + 1:]
                 if bucket in d:
                     d[bucket].append(word)
                 else:
@@ -63,7 +62,7 @@ def build_graph(begin, end, dict):
 
     # проверка, что оба входных слова есть в словаре
     if flag != 2:
-        print "No such word in dictionary! Please, try again."
+        # print "No such word in dictionary! Please, try again."
         return -1
 
     # построение графа
@@ -76,19 +75,18 @@ def build_graph(begin, end, dict):
 
 
 def find_path(graph, begin, end):
-    
     # текущая граница рассматриваемых элементов
     frontier = PriorityQueue()
     frontier.put(begin)
-    
+
     # сохранение предыдущих элементов (для построения пути)
     previous = {}
     previous[begin] = None
-    
+
     # стоимость от начала до рассматриваемого элемента
     all_cost = {}
     all_cost[begin] = 0
-    
+
     flag = False
 
     while not frontier.empty():
@@ -97,7 +95,6 @@ def find_path(graph, begin, end):
         if current == end:
             flag = True
             break
-
 
         for next in graph.neighbours(current):
             new_cost = all_cost[current] + 1
@@ -108,36 +105,52 @@ def find_path(graph, begin, end):
                 previous[next] = current
 
     if not flag:
-        print "Can't transform " + begin + " -> " + end
+        # print "Can't transform " + begin + " -> " + end
         return -1
-
 
     current = end
     path = [current]
     while current != begin:
         current = previous[current]
         path.append(current)
-    
+
     path.reverse()
 
     return path
 
 
 
-print("Enter first word: ")
-begin = str(raw_input())
-print("Enter second word: ")
-end = str(raw_input())
+input_file = open("input.txt")
+output_file = open("output.txt", 'w')
+expected_file = open("expected.txt")
+test_result_file = open("test_result.txt", 'w')
 
 dictionary = "dict.txt"
 
-steps = -1
+for line in input_file:
+    begin = line.split()[0]
+    end = line.split()[1]
 
-graph = build_graph(begin, end, dictionary)
+    graph = build_graph(begin, end, dictionary)
 
-if graph != -1:
-    steps = find_path(graph, begin, end)
+    if graph != -1:
+        steps = find_path(graph, begin, end)
 
-if steps != -1:
-    for word in steps:
-        print word
+        if steps != -1:
+            result = ' '.join(str(word) for word in steps) + '\n'
+
+        else:
+            result = str(-1) + '\n'
+
+
+    else:
+        result = str(-1) + '\n'
+
+    output_file.write(result)
+
+    if result == expected_file.readline():
+        test_result_file.write("OK" + '\n')
+    else:
+        test_result_file.write("WA" + '\n')
+        print "Wrong answer!"
+        break
