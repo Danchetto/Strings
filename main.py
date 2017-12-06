@@ -1,18 +1,15 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*
 
+
+import sys
 from Queue import *
 
 
 class Graph():
     edges = []
-    nodes = []
 
     def add_edge(self, obj1, obj2):
-        if not obj1 in self.nodes:
-            self.nodes.append(obj1)
-        if not obj2 in self.nodes:
-            self.nodes.append(obj2)
-
         if not (obj1, obj2) in self.edges:
             self.edges.append((obj1, obj2))
 
@@ -47,6 +44,7 @@ def build_graph(begin, end, dict):
     g = Graph()
     flag = 0
     input_file = open(dict, 'r')
+
     # "корзины", состоящие из слов, отличающихся на 1 символ
     for line in input_file:
         if len(line) - 1 == len(begin):
@@ -62,7 +60,6 @@ def build_graph(begin, end, dict):
 
     # проверка, что оба входных слова есть в словаре
     if flag != 2:
-        # print "No such word in dictionary! Please, try again."
         return -1
 
     # построение графа
@@ -104,12 +101,13 @@ def find_path(graph, begin, end):
                 frontier.put(next, priority)
                 previous[next] = current
 
+    # не дошли до искомого элемента (пути нет)
     if not flag:
-        # print "Can't transform " + begin + " -> " + end
         return -1
 
     current = end
     path = [current]
+
     while current != begin:
         current = previous[current]
         path.append(current)
@@ -120,37 +118,34 @@ def find_path(graph, begin, end):
 
 
 
-input_file = open("input.txt")
-output_file = open("output.txt", 'w')
-expected_file = open("expected.txt")
-test_result_file = open("test_result.txt", 'w')
+def main_script(input, output):
+    input_file = open(input)
+    output_file = open(output, 'w')
 
-dictionary = "dict.txt"
+    dictionary = "dict.txt"
 
-for line in input_file:
-    begin = line.split()[0]
-    end = line.split()[1]
+    for line in input_file:
+        begin = line.split()[0]
+        end = line.split()[1]
 
-    graph = build_graph(begin, end, dictionary)
+        graph = build_graph(begin, end, dictionary)
 
-    if graph != -1:
-        steps = find_path(graph, begin, end)
+        if graph != -1:
+            steps = find_path(graph, begin, end)
 
-        if steps != -1:
-            result = ' '.join(str(word) for word in steps) + '\n'
+            if steps != -1:
+                result = ' '.join(str(word) for word in steps)
+
+            else:
+                result = str(-1)
 
         else:
-            result = str(-1) + '\n'
+            result = str(-1)
+
+        output_file.write(result)
 
 
-    else:
-        result = str(-1) + '\n'
 
-    output_file.write(result)
 
-    if result == expected_file.readline():
-        test_result_file.write("OK" + '\n')
-    else:
-        test_result_file.write("WA" + '\n')
-        print "Wrong answer!"
-        break
+if __name__ == '__main__':
+    main_script(sys.argv[1], sys.argv[2])
