@@ -94,5 +94,5 @@ D(i,j) = D(i-1,j-1), если S1[i] = S2[j],
 
 ### Тесты
 
-Тестирование программы было сделано с помощью ![nosetests](http://nose.readthedocs.io/en/latest/) для python.
+Тестирование программы было сделано с помощью [nosetests](http://nose.readthedocs.io/en/latest/) для python.
 В папке ***tests*** находятся файлы тестов, в результаты, а также покрытие кода содержит файл ***test_tesult.txt*** 
