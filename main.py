@@ -10,22 +10,24 @@ class Graph():
     edges = []
 
     def add_edge(self, obj1, obj2):
-        if not (obj1, obj2) in self.edges:
-            self.edges.append((obj1, obj2))
+        a = {obj1, obj2}
 
+        if not a in self.edges:
+            self.edges.append(a)
 
 
     def neighbours(self, obj):
         neighs = []
 
         for pair in self.edges:
-            if obj == pair[0]:
-                neighs.append(pair[1])
-            if obj == pair[1]:
-                neighs.append(pair[0])
+            data = list(pair)
+
+            if obj == data[0]:
+                neighs.append(data[1])
+            if obj == data[1]:
+                neighs.append(data[0])
 
         return neighs
-
 
 
 def heuristic(obj1, obj2):
@@ -36,7 +38,6 @@ def heuristic(obj1, obj2):
             result += 1
 
     return result
-
 
 
 def build_graph(begin, end, dict):
@@ -70,7 +71,6 @@ def build_graph(begin, end, dict):
     return g
 
 
-
 def find_path(graph, begin, end):
     # текущая граница рассматриваемых элементов
     frontier = PriorityQueue()
@@ -94,6 +94,7 @@ def find_path(graph, begin, end):
             break
 
         for next in graph.neighbours(current):
+
             new_cost = all_cost[current] + 1
             if next not in all_cost or new_cost < all_cost[next]:
                 all_cost[next] = new_cost
@@ -115,7 +116,6 @@ def find_path(graph, begin, end):
     path.reverse()
 
     return path
-
 
 
 def main_script(input, output):
@@ -143,8 +143,6 @@ def main_script(input, output):
             result = str(-1)
 
         output_file.write(result)
-
-
 
 
 if __name__ == '__main__':
