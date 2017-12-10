@@ -11,7 +11,9 @@ def neighbours(d, word):
 
     for i in range(len(word)):
         bucket = word[:i] + '_' + word[i + 1:]
-        neighs.extend(d[bucket])
+        for j in d[bucket]:
+            if j != word:
+                neighs.append(j)
 
     return neighs
 
@@ -54,7 +56,7 @@ def build_graph(begin, end, dict):
 def find_path(graph, begin, end):
     # текущая граница рассматриваемых элементов
     frontier = PriorityQueue()
-    frontier.put(begin)
+    frontier.put((0, begin))
 
     # сохранение предыдущих элементов (для построения пути)
     previous = {}
@@ -67,21 +69,26 @@ def find_path(graph, begin, end):
     flag = False
 
     while not frontier.empty():
-        current = frontier.get()
+
+        current_tuple = frontier.get()
+        current = current_tuple[1]
 
         if current == end:
             flag = True
             break
 
-        # for next in graph.neighbours(current):
         for next in neighbours(graph, current):
 
             new_cost = all_cost[current] + 1
-            if next not in all_cost or new_cost < all_cost[next]:
+            if next not in all_cost:
                 all_cost[next] = new_cost
-                priority = heuristic(end, next) + new_cost
-                frontier.put(next, priority)
-                previous[next] = current
+
+            if all_cost[current] + 1 > all_cost[next]:
+                continue
+
+            priority = new_cost + heuristic(next, end)
+            frontier.put((priority, next))
+            previous[next] = current
 
     # не дошли до искомого элемента (пути нет)
     if not flag:
@@ -128,3 +135,5 @@ def main_script(input, output):
 
 if __name__ == '__main__':
     main_script(sys.argv[1], sys.argv[2])
+
+# main_script('input.txt', 'output.txt')
