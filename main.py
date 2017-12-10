@@ -6,28 +6,14 @@ import sys
 from Queue import *
 
 
-class Graph():
-    edges = []
+def neighbours(d, word):
+    neighs = []
 
-    def add_edge(self, obj1, obj2):
-        a = {obj1, obj2}
+    for i in range(len(word)):
+        bucket = word[:i] + '_' + word[i + 1:]
+        neighs.extend(d[bucket])
 
-        if not a in self.edges:
-            self.edges.append(a)
-
-
-    def neighbours(self, obj):
-        neighs = []
-
-        for pair in self.edges:
-            data = list(pair)
-
-            if obj == data[0]:
-                neighs.append(data[1])
-            if obj == data[1]:
-                neighs.append(data[0])
-
-        return neighs
+    return neighs
 
 
 def heuristic(obj1, obj2):
@@ -42,7 +28,6 @@ def heuristic(obj1, obj2):
 
 def build_graph(begin, end, dict):
     d = {}
-    g = Graph()
     flag = 0
     input_file = open(dict, 'r')
 
@@ -63,12 +48,7 @@ def build_graph(begin, end, dict):
     if flag != 2:
         return -1
 
-    # построение графа
-    for bucket in d.keys():
-        for i in range(len(d[bucket])):
-            for j in range(i + 1, len(d[bucket])):
-                g.add_edge(d[bucket][i], d[bucket][j])
-    return g
+    return d
 
 
 def find_path(graph, begin, end):
@@ -93,7 +73,8 @@ def find_path(graph, begin, end):
             flag = True
             break
 
-        for next in graph.neighbours(current):
+        # for next in graph.neighbours(current):
+        for next in neighbours(graph, current):
 
             new_cost = all_cost[current] + 1
             if next not in all_cost or new_cost < all_cost[next]:
