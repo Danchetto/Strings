@@ -110,7 +110,7 @@ def main_script(input, output):
     input_file = open(input)
     output_file = open(output, 'w')
 
-    dictionary = "dict.txt"
+    dictionary = "./dict_preparation/dict.txt"
 
     for line in input_file:
         begin = line.split()[0]
